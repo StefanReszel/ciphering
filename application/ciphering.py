@@ -1,11 +1,7 @@
-from coding.factory import CoderFactory
 from manage.factory import BufferFactory, FileManagerFactory
 
 
 class Ciphering:
-    def get_coder(self):
-        pass
-    
     def get_file_manager(self):
         pass
     

@@ -1,5 +1,7 @@
-from .abstract import AbstractBuffer
+from .abstract import Buffer
 
 
-class DictBuffer(AbstractBuffer):
-    pass
+class DictBuffer(Buffer):
+    @property
+    def data(self):
+        return self.__dict__

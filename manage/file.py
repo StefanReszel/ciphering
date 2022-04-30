@@ -8,6 +8,7 @@ class JSONManager(FileManager):
         file_name = f"{file_name}.json"
         super().save(file_name, json_data)
 
-    def get_coder_name_and_text_from_file(self, file_content):
-        file_data = json.loads(file_content)
-        return file_data["coder"], file_data["text"]
+    def read(self, file_name) -> dict:
+        file_content = super().read(file_name)
+        data = json.loads(file_content)
+        return data

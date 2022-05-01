@@ -1,15 +1,12 @@
-from coding.abstract import Coder
-from coding.factory import CoderFactory
-
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
 
 class Buffer(ABC):
-    def __init__(self, coder_name: str, txt: str):
+    def __init__(self, coder_name: str, text: str):
         self.coder = coder_name
-        self.txt = txt
+        self.text = text
 
     @property
     @abstractmethod

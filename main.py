@@ -2,7 +2,8 @@ from application.ciphering import Ciphering
 
 
 def main():
-    pass
+    app = Ciphering()
+    app.start()
 
 
 if __name__ == "__main__":

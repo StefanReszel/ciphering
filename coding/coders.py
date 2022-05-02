@@ -3,10 +3,10 @@ import codecs
 
 
 class ROT13(Coder):
-    def encode(self, txt: str) -> str:
+    def encode(self, txt):
         return self._rot13(txt)
 
-    def decode(self, txt: str) -> str:
+    def decode(self, txt):
         return self._rot13(txt)
 
     def _rot13(self, txt: str) -> str:
@@ -14,10 +14,10 @@ class ROT13(Coder):
 
 
 class ROT47(Coder):
-    def encode(self, txt: str) -> str:
+    def encode(self, txt):
         return self._rot47(txt)
 
-    def decode(self, txt: str) -> str:
+    def decode(self, txt):
         return self._rot47(txt)
 
     def _rot47(self, txt: str) -> str:

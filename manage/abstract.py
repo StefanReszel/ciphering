@@ -1,26 +1,35 @@
+from coding.abstract import Coder
+from coding.factory import CoderFactory
+
 from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Any
 
 
-class AbstractBuffer(ABC):
+class Buffer(ABC):
+    def __init__(self, coder_name: str, txt: str):
+        self.coder = coder_name
+        self.txt = txt
+
+    @property
     @abstractmethod
-    def get(self):
-        pass
-    
-    @abstractmethod
-    def set(self):
-        pass
-    
-    @abstractmethod
-    def delete(self):
-        pass
+    def data(self) -> Any:
+        raise NotImplementedError
 
 
-class AbstractFileManager(ABC):
-    @abstractmethod
-    def read(self):
-        pass
-    
-    @abstractmethod
-    def save(self):
-        pass
-    
+class FileManager(ABC):
+    dir_with_saved_files = Path("ciphered-files/")
+
+    def save(self, file_name: str, content: str):
+        self.dir_with_saved_files.mkdir(exist_ok=True)
+        path_to_file = self.dir_with_saved_files / file_name
+
+        with open(path_to_file, "w") as file:
+            file.write(content)
+
+    def read(self, file_name: str) -> str:
+        path_to_file = self.dir_with_saved_files / file_name
+
+        with open(path_to_file, "r") as file:
+            content = file.read()
+        return content

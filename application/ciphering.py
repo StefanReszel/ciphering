@@ -21,12 +21,14 @@ class Ciphering:
             3: "Decrypt.",
             4: "Peek the buffer.",
             }
+        self.interrupt_option = len(self.menu) + 1
 
         self.tasks = {
             1: self.task_encrypt,
             2: self.task_save_to_file,
             3: self.task_decrypt,
             4: self.task_peek_the_buffer,
+            self.interrupt_option: self.task_exit
         }
 
         self.messages = {
@@ -43,17 +45,13 @@ class Ciphering:
         self.file_manager = self.get_file_manager(self.file_manager_name)
         self.buffer = None
 
-        interrupt_option = len(self.tasks) + 1
+        self.is_running = True
 
         print(self.messages["welcome"])
-        while True:
+        while self.is_running:
             print(self.messages["request_for_task"])
             self.print_menu()
             choice = self.get_user_choice()
-
-            if choice == interrupt_option:
-                print(self.messages["goodbye"])
-                break
 
             task = self.tasks.get(choice)
 
@@ -141,6 +139,10 @@ class Ciphering:
         else:
             print(self.messages["no_buffer"])
 
+    def task_exit(self):
+        print(self.messages["goodbye"])
+        self.is_running = False
+
     def get_user_choice(self) -> int | str:
         choice = input()
         try :
@@ -151,7 +153,7 @@ class Ciphering:
     def print_menu(self):
         for number, action in self.menu.items():
             print(f"{number}. {action}")
-        print(f"{len(self.menu)+1}. Exit.")
+        print(f"{self.interrupt_option}. Exit.")
 
     def print_coders(self):
         for number, coder in self.coders.items():

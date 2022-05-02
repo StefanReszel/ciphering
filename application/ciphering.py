@@ -31,7 +31,7 @@ class Ciphering:
 
         self.messages = {
             "welcome": "Welcome to Cyphering!",
-            "request_for_task": f"Pick 1 to {str(len(self.menu))} from menu below:",
+            "request_for_task": f"Pick 1 to {str(len(self.menu)+1)} from menu below:",
             "bad_choice": "Typed invalid value. Try again.",
             "goodbye": "Goodbye!",
             "no_buffer": "You have nothing encrypted yet.",

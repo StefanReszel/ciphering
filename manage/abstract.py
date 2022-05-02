@@ -15,7 +15,8 @@ class Buffer(ABC):
 
 
 class FileManager(ABC):
-    dir_with_saved_files = Path("ciphered-files/")
+    def __init__(self):
+        self.dir_with_saved_files = Path("ciphered-files/")
 
     def save(self, file_name: str, content: str):
         self.dir_with_saved_files.mkdir(exist_ok=True)

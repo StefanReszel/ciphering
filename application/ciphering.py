@@ -1,7 +1,6 @@
 from coding.factory import CoderFactory, Coder
 from manage.factory import BufferFactory, FileManagerFactory, FileManager
 
-from typing import Any
 import os
 
 
@@ -21,59 +20,47 @@ class Ciphering:
             2: "Save to file.",
             3: "Decrypt.",
             4: "Peek the buffer.",
-            5: "Exit.",
             }
 
+        self.tasks = {
+            1: self.task_encrypt,
+            2: self.task_save_to_file,
+            3: self.task_decrypt,
+            4: self.task_peek_the_buffer,
+        }
+
+        self.messages = {
+            "welcome": "Welcome to Cyphering!",
+            "request_for_task": f"Pick 1 to {str(len(self.menu))} from menu below:",
+            "bad_choice": "Typed invalid value. Try again.",
+            "goodbye": "Goodbye!",
+            "no_buffer": "You have nothing encrypted yet.",
+        }
+
     def start(self):
-        buffer_creator = self.buffer_factory.get_buffer(self.buffer_name)
+        self.buffer_creator = self.buffer_factory.get_buffer(self.buffer_name)
 
         self.file_manager = self.get_file_manager(self.file_manager_name)
         self.buffer = None
 
-        welcome_prompt = "Welcome to Cyphering!"
-        request_for_task= f"Pick 1 to {str(len(self.menu))} from menu below:"
-        bad_choice_prompt = "Typed invalid value. Try again."
-        no_buffer_prompt = "You have nothing encrypted yet."
-        goodbye_prompt = "Goodbye!"
+        interrupt_option = len(self.tasks) + 1
 
-        print(welcome_prompt)
+        print(self.messages["welcome"])
         while True:
-            print(request_for_task)
+            print(self.messages["request_for_task"])
             self.print_menu()
             choice = self.get_user_choice()
 
-            match choice:
-                case 1:
-                    data = self.task_encrypt()
-                    if data is None:
-                        continue
-                    self.buffer = buffer_creator(*data)
-                    print("Done!")
-                    print()
-                case 2:
-                    if self.buffer:
-                        self.task_save_to_file(self.buffer.data)
-                        self.buffer = None
-                        print("Done!")
-                    else:
-                        print(no_buffer_prompt)
-                    print()
-                case 3:
-                    self.task_decrypt()
-                    print()
-                case 4:
-                    if self.buffer:
-                        print(self.buffer.text)
-                    else:
-                        print(no_buffer_prompt)
-                    print()
-                case 5:
-                    print(goodbye_prompt)
-                    break
-                case _:
-                    print(bad_choice_prompt)
-                    print()
+            if choice == interrupt_option:
+                print(self.messages["goodbye"])
+                break
 
+            task = self.tasks.get(choice)
+
+            if not task:
+                continue
+
+            task()
 
     def task_encrypt(self) -> tuple[str, str] | None:
         request_for_coder = f"Type a number to pick the coder, or return:"
@@ -101,15 +88,25 @@ class Ciphering:
 
         encoded_txt = coder.encode(to_encode)
 
-        return coder_name, encoded_txt
+        self.buffer = self.buffer_creator(coder_name, encoded_txt)
 
-    def task_save_to_file(self, buffer_data: Any):
+        print("Done!")
+
+    def task_save_to_file(self):
+        if not self.buffer:
+            print(self.messages["no_buffer"])
+            return
+
         request_for_file_name = "Type the file name where data will be saved:"
         
         print(request_for_file_name)
         file_name = input()
 
-        self.file_manager.save(file_name, buffer_data)
+        self.file_manager.save(file_name, self.buffer.data)
+
+        self.buffer = None
+
+        print("Done!")
 
     def task_decrypt(self):
         list_of_files_prompt = "Type a full name of file from the list below:"
@@ -133,10 +130,16 @@ class Ciphering:
             coder = self.get_coder(data["coder"])
             decoded_text = coder.decode(data["text"])
             print(decoded_text)
+
         else:
             print(invalid_file_name_prompt)
             return
 
+    def task_peek_the_buffer(self):
+        if self.buffer:
+            print(self.buffer.text)
+        else:
+            print(self.messages["no_buffer"])
 
     def get_user_choice(self) -> int | str:
         choice = input()
@@ -148,6 +151,7 @@ class Ciphering:
     def print_menu(self):
         for number, action in self.menu.items():
             print(f"{number}. {action}")
+        print(f"{len(self.menu)+1}. Exit.")
 
     def print_coders(self):
         for number, coder in self.coders.items():

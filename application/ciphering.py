@@ -6,24 +6,24 @@ import os
 
 
 class Ciphering:
-    coder_factory = CoderFactory()
-    coders = dict(enumerate(coder_factory.coders.keys(), start=1))
+    def __init__(self):
+        self.coder_factory = CoderFactory()
+        self.coders = dict(enumerate(self.coder_factory.coders.keys(), start=1))
 
-    buffer_factory = BufferFactory()
-    buffer_name = "dict"
+        self.buffer_factory = BufferFactory()
+        self.buffer_name = "dict"
 
-    file_manager_factory = FileManagerFactory()
-    file_manager_name = "json"
+        self.file_manager_factory = FileManagerFactory()
+        self.file_manager_name = "json"
 
-    menu = { 
-        1: "Type text and encrypt.",
-        2: "Save to file.",
-        3: "Decrypt.",
-        4: "Peek the buffer.",
-        5: "Exit.",
-        }
+        self.menu = { 
+            1: "Type text and encrypt.",
+            2: "Save to file.",
+            3: "Decrypt.",
+            4: "Peek the buffer.",
+            5: "Exit.",
+            }
 
-  
     def start(self):
         buffer_creator = self.buffer_factory.get_buffer(self.buffer_name)
 

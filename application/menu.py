@@ -1,4 +1,4 @@
-class Menu:
+class MenuEnum:
     ENCRYPT = 1
     SAVE = 2
     DECRYPT = 3

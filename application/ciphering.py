@@ -1,6 +1,6 @@
 from coding.factory import CoderFactory, Coder
 from manage.factory import BufferFactory, FileManagerFactory, FileManager
-from .menu import Menu
+from .menu import MenuEnum
 from.messages import Messages
 
 import os
@@ -18,18 +18,18 @@ class Ciphering:
         self.file_manager_name = "json"
 
         self.menu = { 
-            Menu.ENCRYPT: "Type text and encrypt.",
-            Menu.SAVE: "Save to file.",
-            Menu.DECRYPT: "Decrypt.",
-            Menu.PEEK: "Peek the buffer.",
+            MenuEnum.ENCRYPT: "Type text and encrypt.",
+            MenuEnum.SAVE: "Save to file.",
+            MenuEnum.DECRYPT: "Decrypt.",
+            MenuEnum.PEEK: "Peek the buffer.",
             }
         self.interrupt_option = len(self.menu) + 1
 
         self.tasks = {
-            Menu.ENCRYPT: self.__task_encrypt,
-            Menu.SAVE: self.__task_save_to_file,
-            Menu.DECRYPT: self.__task_decrypt,
-            Menu.PEEK: self.__task_peek_the_buffer,
+            MenuEnum.ENCRYPT: self.__task_encrypt,
+            MenuEnum.SAVE: self.__task_save_to_file,
+            MenuEnum.DECRYPT: self.__task_decrypt,
+            MenuEnum.PEEK: self.__task_peek_the_buffer,
             self.interrupt_option: self.__task_exit
         }
 
@@ -41,9 +41,9 @@ class Ciphering:
 
         self.is_running = True
 
-        print(Messages.welcome)
+        print(Messages.WELCOME)
         while self.is_running:
-            print(Messages.request_for_task.format(interrupt_option=self.interrupt_option))
+            print(Messages.REQUEST_FOR_TASK.format(interrupt_option=self.interrupt_option))
             self.__print_menu()
             choice = self.__get_user_choice()
 
@@ -55,9 +55,9 @@ class Ciphering:
         return_option = len(self.coders) + 1
 
         while coder_name is None:
-            print(Messages.request_for_coder)
+            print(Messages.REQUEST_FOR_CODER)
             self.__print_coders()
-            print(Messages.return_from_coders_option.format(return_option=return_option))
+            print(Messages.RETURN_FROM_CODERS_OPTION.format(return_option=return_option))
 
             choice_of_coder = self.__get_user_choice()
 
@@ -68,38 +68,38 @@ class Ciphering:
 
         coder = self.__get_coder(coder_name)
 
-        print(Messages.request_for_text_to_encode)
+        print(Messages.REQUEST_FOR_TEXT_TO_ENCODE)
         to_encode = input()
 
         encoded_txt = coder.encode(to_encode)
 
         self.buffer = self.buffer_creator(coder_name, encoded_txt)
 
-        print(Messages.done)
+        print(Messages.DONE)
 
     def __task_save_to_file(self):
         if not self.buffer:
-            print(Messages.no_buffer)
+            print(Messages.NO_BUFFER)
             return
 
-        print(Messages.request_for_file_name)
+        print(Messages.REQUEST_FOR_FILE_NAME)
         file_name = input()
 
         self.file_manager.save(file_name, self.buffer.data)
 
         self.buffer = None
 
-        print(Messages.done)
+        print(Messages.DONE)
 
     def __task_decrypt(self):
         path = self.file_manager.dir_with_saved_files
         files = os.listdir(path)
 
         if files:
-            print(Messages.list_of_files_prompt)
+            print(Messages.LIST_OF_FILES_PROMPT)
             self.__print_list_of_files(files)
         else:
-            print(Messages.no_files_prompt)
+            print(Messages.NO_FILES_PROMPT)
             return
 
         file_name = input()
@@ -111,17 +111,17 @@ class Ciphering:
             print(decoded_text)
 
         else:
-            print(Messages.invalid_file_name_prompt)
+            print(Messages.INVALID_FILE_NAME_PROMPT)
             return
 
     def __task_peek_the_buffer(self):
         if self.buffer:
             print(self.buffer.text)
         else:
-            print(Messages.no_buffer)
+            print(Messages.NO_BUFFER)
 
     def __task_exit(self):
-        print(Messages.goodbye)
+        print(Messages.GOODBYE)
         self.is_running = False
 
     def __unavailable(self):
@@ -137,7 +137,7 @@ class Ciphering:
     def __print_menu(self):
         for number, action in self.menu.items():
             print(f"{number}. {action}")
-        print(Messages.exit_task.format(interrupt_option=self.interrupt_option))
+        print(Messages.EXIT_TASK.format(interrupt_option=self.interrupt_option))
 
     def __print_coders(self):
         for number, coder in self.coders.items():

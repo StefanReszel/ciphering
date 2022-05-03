@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 
+@dataclass
 class Buffer(ABC):
-    def __init__(self, coder_name: str, text: str):
-        self.coder = coder_name
-        self.text = text
+    coder: str
+    text: str
 
     @property
     @abstractmethod

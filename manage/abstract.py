@@ -1,15 +1,13 @@
-from coding.abstract import Coder
-from coding.factory import CoderFactory
-
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 
+@dataclass
 class Buffer(ABC):
-    def __init__(self, coder_name: str, txt: str):
-        self.coder = coder_name
-        self.txt = txt
+    coder: str
+    text: str
 
     @property
     @abstractmethod
@@ -18,7 +16,8 @@ class Buffer(ABC):
 
 
 class FileManager(ABC):
-    dir_with_saved_files = Path("ciphered-files/")
+    def __init__(self):
+        self.dir_with_saved_files = Path("ciphered-files/")
 
     def save(self, file_name: str, content: str):
         self.dir_with_saved_files.mkdir(exist_ok=True)

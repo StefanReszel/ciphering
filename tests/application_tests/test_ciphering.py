@@ -14,8 +14,8 @@ class TestCiphering:
         return {"coder": app.coders[1], "text": "test_text"}
 
     @pytest.fixture
-    def file_manager_mock(self, app, file_data):
-        file_manager = app.file_manager = Mock(name="file_manager")
+    def file_manager_mock(self, mocker, app, file_data):
+        file_manager = mocker.patch.object(app, "file_manager")
         file_manager.read.return_value = file_data
         return file_manager
 
@@ -42,17 +42,16 @@ class TestCiphering:
         return mocker.patch("application.ciphering.Ciphering._Ciphering__get_coder_name")
 
     @pytest.fixture
-    def buffer_creator_mock(self, app):
-        buffer_creator = app.buffer_creator = Mock(name="app.buffer_creator")
-        return buffer_creator
+    def buffer_creator_mock(self, mocker, app):
+        return mocker.patch.object(app, "buffer_creator")
 
     @pytest.fixture
     def user_choice(self, mocker, request):
         mocker.patch("application.ciphering.Ciphering._Ciphering__get_user_choice", return_value=request.param)
 
     @pytest.fixture
-    def set_buffer_attribute(self, app):
-        app.buffer = Mock(name="app.buffer")
+    def set_buffer_attribute(self, mocker, app):
+        mocker.patch.object(app, "buffer")
 
     @pytest.fixture
     def while_loop_iteration_control(self, app, request):
@@ -67,7 +66,6 @@ class TestCiphering:
     def test_start_should_invoke_task_encrypt_from_tasks_dict_when_user_chose_menu_enum_encrypt(self,
         while_loop_iteration_control, app, user_choice):
         task_encrypt_mock = app.tasks[MenuEnum.ENCRYPT] = Mock(name="task_encrypt")
-        
         app.start()
 
         assert task_encrypt_mock.called

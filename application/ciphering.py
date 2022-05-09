@@ -33,14 +33,13 @@ class Ciphering:
             self.interrupt_option: self.__task_exit
         }
 
-    def start(self):
-        self.buffer_creator = self.buffer_factory.get_buffer(self.buffer_name)
-
         self.file_manager = self.__get_file_manager(self.file_manager_name)
+        self.buffer_creator = self.buffer_factory.get_buffer(self.buffer_name)
         self.buffer = None
 
         self.is_running = True
 
+    def start(self):
         print(Messages.WELCOME)
         while self.is_running:
             print(Messages.REQUEST_FOR_TASK.format(interrupt_option=self.interrupt_option))

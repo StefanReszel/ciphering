@@ -66,6 +66,7 @@ class TestCiphering:
     def test_start_should_invoke_task_encrypt_from_tasks_dict_when_user_chose_menu_enum_encrypt(self,
         while_loop_iteration_control, app, user_choice):
         task_encrypt_mock = app.tasks[MenuEnum.ENCRYPT] = Mock(name="task_encrypt")
+
         app.start()
 
         assert task_encrypt_mock.called
